@@ -7,6 +7,8 @@ public class Circle {
 
     private double radius;
     private String color;
+    private Circle  f;
+    private boolean filled = true;
 
     // method constructor:
 
@@ -17,6 +19,15 @@ public class Circle {
     public Circle(double radius, String color) {
         this.radius = radius;
         this.color = color;
+    }
+
+    public Circle(double radius) {
+    }
+
+    public Circle(double radius, String color, boolean filled) {
+        this.radius = radius;
+        this.color = color;
+        this.filled = filled;
     }
 
     // get and set:
