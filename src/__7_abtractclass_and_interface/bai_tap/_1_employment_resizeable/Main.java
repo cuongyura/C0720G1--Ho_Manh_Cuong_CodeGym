@@ -37,17 +37,17 @@ public class Main {
             System.out.println(shape);
 
             if(shape instanceof Circle){
-                System.out.println("Area Circle behind is");
+                System.out.println("Area Circle behind is: ");
                 System.out.println(shape.getArea());
             }
 
             if(shape instanceof Rectangle){
-                System.out.println("Area rectangle behind is");
+                System.out.println("Area rectangle behind is: ");
                 System.out.println(shape.getArea());
             }
 
             if(shape instanceof Square){
-                System.out.println("Area Square behind is");
+                System.out.println("Area Square behind is: ");
                 System.out.println(shape.getArea());
             }
 
