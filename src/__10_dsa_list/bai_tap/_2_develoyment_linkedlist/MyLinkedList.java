@@ -1,8 +1,6 @@
 package __10_dsa_list.bai_tap._2_develoyment_linkedlist;
 
-import java.sql.Array;
-import java.util.Arrays;
-import java.util.LinkedList;
+
 
 public class MyLinkedList<E> {
     private Node head;
