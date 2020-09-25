@@ -55,6 +55,6 @@ public class House extends Services {
                 "standrdRoom='" + standrdRoom + '\'' +
                 ", descriptionConvent='" + descriptionConvent + '\'' +
                 ", numberFloors=" + numberFloors +
-                '}';
+                '}'+ super.toString();
     }
 }

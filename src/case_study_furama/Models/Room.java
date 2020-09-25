@@ -6,13 +6,14 @@ public class Room extends Services {
 
     // method constructor:
 
-    public Room(EtraServices serviceFree) {
-        ServiceFree = serviceFree;
-    }
 
     public Room(String id, String fullName, double areaUse, double rentalCosts, int maximumPeoples, String rentalType, EtraServices serviceFree) {
         super(id, fullName, areaUse, rentalCosts, maximumPeoples, rentalType);
         ServiceFree = serviceFree;
+    }
+
+    public Room() {
+
     }
 
     // get and set properties :
@@ -35,6 +36,6 @@ public class Room extends Services {
     public String toString() {
         return "Room{" +
                 "ServiceFree=" + ServiceFree +
-                '}';
+                '}' + super.toString();
     }
 }

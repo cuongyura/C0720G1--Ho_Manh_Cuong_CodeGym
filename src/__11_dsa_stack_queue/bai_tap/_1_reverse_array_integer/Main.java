@@ -9,6 +9,7 @@ public class Main {
         integerStack.push(3);
         integerStack.push(4);
         integerStack.push(5);
+
         while (!integerStack.isEmpty()) {
             System.out.printf("%s ",integerStack.pop());
         }
