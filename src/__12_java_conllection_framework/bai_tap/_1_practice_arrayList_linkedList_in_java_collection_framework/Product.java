@@ -46,7 +46,7 @@ public class Product implements Comparable<Product> {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                '}' + "\n";
+                '}';
     }
 
     @Override

@@ -70,6 +70,7 @@ public class Main {
 
 
     private static void showInformationOfProducts() {
+
         for (Product product : listProduct) {
             System.out.println(product.toString());
         }
@@ -79,21 +80,18 @@ public class Main {
 
     private static void addNewProduct() {
 
-        Product product = new Product();
-
         scanner.nextLine();
         System.out.println("Please input id: ");
-        product.setId(scanner.nextInt());
+        int id = scanner.nextInt();
         scanner.nextLine();
         System.out.println("Please input name: ");
-        product.setName(scanner.nextLine());
+        String name = scanner.nextLine();
         System.out.println("Please input price: ");
-        product.setPrice(scanner.nextInt());
+        int price = scanner.nextInt();
+        Product product = new Product(id, name, price);
 
         // add file in array list:
         listProduct.add(product);
-        System.out.println(listProduct);
-
         System.out.println("Add new product complete!....");
     }
 
@@ -103,10 +101,10 @@ public class Main {
         showInformationOfProducts();
         scanner.nextLine();
         System.out.println("Please input id product you want delete information: ");
-        int chooseDelete = scanner.nextInt();
+        int valueId = scanner.nextInt();
 
         for (int i = 0; i < listProduct.size(); i++) {
-            if (listProduct.get(i).getId() == chooseDelete) {
+            if (valueId == listProduct.get(i).getId()) {
                 listProduct.remove(i);
                 System.out.println("Delete compelete!!!....");
                 break;
@@ -116,86 +114,69 @@ public class Main {
 
     // edit:
     private static void editProduct() {
-        showInformationOfProducts();
-        scanner.nextLine();
-        System.out.println("Please input id product you want edit Information");
-        int chooseEdit = scanner.nextInt();
-        // show information eidt and select properties need fix:
-        // select id:
-        for (int i = 0; i < listProduct.size(); i++){
-            if(listProduct.get(i).getId() == chooseEdit){
-                // show properties of object:
-                System.out.println("1. " + listProduct.get(i).getId());
-                System.out.println("2. " + listProduct.get(i).getName());
-                System.out.println("3. " + listProduct.get(i).getPrice());
-                scanner.nextLine();
-                System.out.println("Please choose properties of product you want edit: ");
-                String chooseProperty = scanner.nextLine();
-                // input data need change:
-                System.out.println("Please enter value you want change: ");
-                String valueProperty = scanner.nextLine();
-                switch (chooseProperty){
-                    case "1":
-                        listProduct.get(i).setId(Integer.parseInt(valueProperty));
-                        break;
-                    case "2":
-                        listProduct.get(i).setName(valueProperty);
-                        break;
-                    case "3":
-                        listProduct.get(i).setPrice(Integer.parseInt(valueProperty));
-                        break;
-                }
-                System.out.println("Edit complete!!!! ....");
-                break;
-            }
-        }
+
+         System.out.println("Please input ide edit information: ");
+         int idEdit = scanner.nextInt();
+
+         System.out.println("Please input new name: ");
+         String newName = scanner.nextLine();
+
+         System.out.println("Please input new price: ");
+         int newprice = scanner.nextInt();
+
+         for (int i = 0; i < listProduct.size(); i++) {
+             if(idEdit == listProduct.get(i).getId()){
+                   listProduct.get(i).setName(newName);
+                   listProduct.get(i).setPrice(newprice);
+             }
+         }
     }
 
     // find student CSv:
-    public static String findproduct() {
-        Scanner scanner = new Scanner(System.in);
-        boolean isFounded;
-        String choice;
-        while (true) {
-            System.out.println("seach find: " +
-                    "\n1. id." +
-                    "\n2. name.");
-            choice = scanner.nextLine();
-            if (choice.equals("1") || choice.equals("2")) break;
-            else System.out.println("Selection not true! ");
-        }
-        if (choice.equals("1")) {
-            System.out.println("Please input id: ");
-            String id = scanner.nextLine();
-            isFounded = findProductBy("id", id);
-        } else {
-            System.out.println("Please input name");
-            String name = scanner.nextLine();
-            isFounded = findProductBy("name", name);
-        }
-        if (isFounded) return "find complete !...";
-        else return "not find complete !...";
-    }
-
-    public static boolean findProductBy(String type, String value)  {
+    public static void findproduct() {
+        scanner.nextLine();
         showInformationOfProducts();
-        boolean isFounded = false;
-        for (Product product : listProduct) {
-            switch (type) {
-                case "id":
-                    if (product.getId() == Integer.parseInt(value)) {
-                        isFounded = true;
-                        System.out.println(product.toString());
+        int choose =0;
+        do {
+            System.out.println("1. id. \n" +
+                    "2. name. \n" +
+                    "3. back to menu. \n" +
+                    "4. exit.");
+            System.out.println("Please input choose by id or name to search information: : ");
+            choose = scanner.nextInt();
+            switch (choose) {
+                case 1:
+                    scanner.nextLine();
+                    System.out.println("Please input find id: ");
+                    int newId = scanner.nextInt();
+
+                    for (int i = 0; i < listProduct.size(); i++) {
+                        if (newId == (listProduct.get(i).getId())) {
+                            System.out.println(listProduct.get(i).toString());
+                        }
                     }
                     break;
-                case "name":
-                    if (product.getName().equals(value)) {
-                        isFounded = true;
-                        System.out.println(product.toString());
-                    }
-            }
-        }
-        return isFounded;
-    }
+                case 2:
+                    scanner.nextLine();
+                    System.out.println("Please input find name: ");
+                    String newName = scanner.nextLine();
 
+                    for (int i = 0; i < listProduct.size(); i++) {
+                        if (newName.equals(listProduct.get(i).getName())) {
+                            System.out.println(listProduct.get(i).toString());
+                        }
+                    }
+                    break;
+                case 3:
+                    displayMainMenu();
+                case 4:
+                    System.exit(0);
+                    break;
+            }
+
+
+        } while (choose >= 1 && choose <= 4);
+
+
+    }
 }

@@ -117,12 +117,23 @@ public class MainController {
 
 
     private static void showAllService(String fileName) {
+
+        List<Services> listServices = readAllServices(fileName);
+
+        Services services = null;
         System.out.println("---------------------------------");
         System.out.println("List services: ");
-        for (Services services : readAllServices(fileName)) {
+
+        for (int i = 0; i < listServices.size(); i++ ) {
+            services = listServices.get(i);
+            System.out.println((i + 1)+". ");
             services.showInFor();
 
         }
+        /*for (Services services : readAllServices(fileName)) {
+            services.showInFor();
+
+        }*/
 
         System.out.println("Show data complete!!! ... ");
     }
@@ -180,7 +191,47 @@ public class MainController {
     }
 
     private static void addNewBooking() {
+
+        // show information customer in file CSV:
+        List<Customer> listCustomer = readAllCustomer();
+        showInformationOfCustomer();
+
+        int choose = 0;
+        do {
+            System.out.println("1.\tBooking Villa. \n" +
+                               "2.\tBooking House. \n" +
+                               "3.\tBooking Room. \n" +
+                               "4.\tBack to menu.\n" +
+                               "5.\tExit.\n" );
+            System.out.println("Please input booking a services: ");
+            choose = scanner.nextInt();
+            List<Services> listOfService = null;
+             switch (choose) {
+                 case 1:
+                     listOfService = readAllServices(VILLA);
+                     showAllService(VILLA);
+                     break;
+                 case 2:
+                     listOfService = readAllServices(HOUSE);
+                     showAllService(HOUSE);
+
+                     break;
+                 case 3:
+                     listOfService = readAllServices(ROOM);
+                     showAllService(ROOM);
+                     break;
+                 case 4:
+                     displayMainMenu();
+                     break;
+                 case 5:
+                     System.exit(0);
+                     break;
+             }
+         } while (choose >= 1 && choose <= 7);
+
+        Customer customer = listCustomer.get(choose -1);
     }
+
 
     private static List<Customer> readAllCustomer(){
         FileUtils.setFullPathFile(CUSTOMER);
@@ -203,19 +254,27 @@ public class MainController {
              listOfCustomer.add(customer);
 
         }
+        Collections.sort(listOfCustomer);
         return listOfCustomer;
 }
     private static void showInformationOfCustomer() {
         System.out.println("---------------------------------");
         System.out.println("List Customer: ");
         // lấy data CSV ra:
-        List<Customer> listOfCustomers = readAllCustomer();
+        List<Customer> listOfCustomer = readAllCustomer();
 
-        Collections.sort(listOfCustomers);
 
-        for (Customer customer :listOfCustomers) {
+       /* for (Customer customer :listOfCustomers) {
             customer.showInFor();
 
+        }*/
+
+       // đánh dấu số thứ tự:
+         Customer customer = null;
+        for(int i = 0; i < listOfCustomer.size(); i++) {
+            customer = listOfCustomer.get(i);
+            System.out.println((i + 1)+". ");
+            customer.showInFor();
         }
 
         System.out.println("Show data complete!!! ... ");
