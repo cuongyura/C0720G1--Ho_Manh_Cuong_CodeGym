@@ -1,4 +1,4 @@
-package __16_io_text_file.bai_tap._1_copy_file_io;
+package __16_io_textfile.bai_tap._1_copy_file_io;
 
 import java.io.*;
 
@@ -13,30 +13,33 @@ public class CopyFileIO {
     }
 
     private static void copyFileOfCSV() {
-
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-
         try {
 
-             inputStream = new FileInputStream(new File(PATH_FILE_1));
-             outputStream = new FileOutputStream(new File(PATH_FILE_2));
+            FileReader fileReader = new FileReader(PATH_FILE_1);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-             int length;
-             byte[] buffer = new byte[1024];
+            FileWriter fileWriter = new FileWriter(PATH_FILE_2);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-             // copy the file content int bytes
+            String line = null;
 
-            while ((length = inputStream.read(buffer)) > 0) {
-                   outputStream.write(buffer, 0 , length);
+            while ((line = bufferedReader.readLine())!= null){
+
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+
             }
+            bufferedReader.close();
+            bufferedWriter.close();
+        } catch (FileNotFoundException e) {
 
-            System.out.println("File is copied successful! ");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
         }
-
-
     }
 
 
