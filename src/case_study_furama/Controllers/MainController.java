@@ -16,6 +16,7 @@ public class MainController {
     public static String HOUSE = "house";
     public static String ROOM = "room";
     public static String CUSTOMER = "customer";
+    public static String BOOKING = "booking";
 
     public static void main(String[] args) {
         displayMainMenu();
@@ -125,6 +126,7 @@ public class MainController {
         System.out.println("List services: ");
 
         for (int i = 0; i < listServices.size(); i++ ) {
+            // lấy từng phần tử:
             services = listServices.get(i);
             System.out.println((i + 1)+". ");
             services.showInFor();
@@ -187,7 +189,56 @@ public class MainController {
 
     }
 
+    /*public static List<Employee> readAllEmployee (String fileName) {
+        FileUtils.setFullPathFile(fileName);
+        List<String> propertiesEmployee = FileUtils.readFile();
+        List<Employee> listOfEmployee = new ArrayList<>();
+        String[] propertiesElement = null;
+        Employee employee = null;
+        for (String propertie : propertiesServices) {
+            propertiesElement = properties.split(StringUtils.COMMA);
+
+            if (fileName.equals(VILLA)) {
+
+                services = new Villa();
+
+                ((Villa) services).setStandrdRoom(propertiesElement[6]);
+                ((Villa) services).setDescriptionConvent(propertiesElement[7]);
+                ((Villa) services).setAreaPool(Double.parseDouble(propertiesElement[8]));
+                ((Villa) services).setNumberFloors(Integer.parseInt(propertiesElement[9]));
+
+            } else if (fileName.equals(HOUSE)) {
+
+                services = new House();
+
+                ((House) services).setStandrdRoom(propertiesElement[6]);
+                ((House) services).setDescriptionConvent(propertiesElement[7]);
+                ((House) services).setNumberFloors(Integer.parseInt(propertiesElement[8]));
+
+            } else if(fileName.equals(ROOM)) {
+
+                EtraServices etraServices = new EtraServices(propertiesElement[6],propertiesElement[7],Double.parseDouble(propertiesElement[8]));
+                services = new Room();
+                ((Room) services).setServiceFree(etraServices);
+
+            }
+
+            services.setId(propertiesElement[0]);
+            services.setFullName(propertiesElement[1]);
+            services.setAreaUse(Double.parseDouble(propertiesElement[2]));
+            services.setRentalCosts(Double.parseDouble(propertiesElement[3]));
+            services.setMaximumPeoples(Integer.parseInt(propertiesElement[4]));
+            services.setRentalType(propertiesElement[5]);
+
+            listOfServices.add(services);
+
+        }
+        return listOfServices;
+
+    }*/
+
     private static void showInformationOfEmployee() {
+
     }
 
     private static void addNewBooking() {
@@ -195,9 +246,13 @@ public class MainController {
         // show information customer in file CSV:
         List<Customer> listCustomer = readAllCustomer();
         showInformationOfCustomer();
+        System.out.println("Please choose customer to booking: ");
+        int iCustomer = scanner.nextInt();
+        List<Services> listOfService = null;
+        showInformationOfCustomer();
 
         int choose = 0;
-        do {
+
             System.out.println("1.\tBooking Villa. \n" +
                                "2.\tBooking House. \n" +
                                "3.\tBooking Room. \n" +
@@ -205,7 +260,6 @@ public class MainController {
                                "5.\tExit.\n" );
             System.out.println("Please input booking a services: ");
             choose = scanner.nextInt();
-            List<Services> listOfService = null;
              switch (choose) {
                  case 1:
                      listOfService = readAllServices(VILLA);
@@ -227,9 +281,20 @@ public class MainController {
                      System.exit(0);
                      break;
              }
-         } while (choose >= 1 && choose <= 7);
 
-        Customer customer = listCustomer.get(choose -1);
+
+        System.out.println("Please choose service to booking: ");
+        int iServices = scanner.nextInt();
+
+        // call customer :
+
+        Customer customer = listCustomer.get(iCustomer - 1);
+        customer.setUseServices(listOfService.get(iServices - 1 ));
+
+        FileUtils.setFullPathFile(BOOKING);
+        FileUtils.writeFile(new String[]{customer.toString()});
+
+        System.out.println("Booking is done!");
     }
 
 
