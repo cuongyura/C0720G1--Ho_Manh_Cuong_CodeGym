@@ -72,7 +72,7 @@ public class Validators {
         boolean flag = Arrays.asList(list).contains(extraService);
 
         if(!flag) {
-            System.out.println("Extra service is not in list service ");
+            System.out.println("Extra service is not in list service : massage, karaoke, food, drink, car ");
         }
 
         return flag;
@@ -85,11 +85,15 @@ public class Validators {
         */
         String[] fullNameElements = fullName.split(" ");
 
-        for (String element : fullNameElements ){
+        /*for (String element : fullNameElements ){
             // lấy chữ cáu đầu tiên:
             if(Character.isLowerCase(element.charAt(0))) {
                  throw new NameException();
             }
+        }*/
+
+        for(int i = 0 ; i < fullName.length(); i++) {
+            if(Character.isLowerCase(fullName.charAt(0))) throw new NameException();
         }
 
         // check khoảng trắng:

@@ -2,7 +2,6 @@ package case_study_furama.Controllers;
 
 import case_study_furama.Commons.ConvertUtils;
 import case_study_furama.Commons.FileUtils;
-import case_study_furama.Commons.StringUtils;
 import case_study_furama.Commons.Validators;
 import case_study_furama.Exceptions.*;
 import case_study_furama.Models.*;
@@ -12,25 +11,31 @@ import java.util.*;
 public class MainController {
 
     public static Scanner scanner = new Scanner(System.in);
-    public static String VILLA = "villa";
-    public static String HOUSE = "house";
-    public static String ROOM = "room";
-    public static String CUSTOMER = "customer";
-    public static String BOOKING = "booking";
+    private static String COMA = ",";
+    private static String FILE_VILA = "E:\\Module2\\src\\case_study_furama\\Data\\villa.csv";
+    private static String FILE_HOUSE = "E:\\Module2\\src\\case_study_furama\\Data\\house.csv";
+    private static String FILE_ROOM = "E:\\Module2\\src\\case_study_furama\\Data\\room.csv";
+    private static String FILE_CUSTOMER = "E:\\Module2\\src\\case_study_furama\\Data\\customer.csv";
+    private static String FILE_BOOKING = "E:\\Module2\\src\\case_study_furama\\Data\\booking.csv";
+    private static  List<Customer> customerList = new ArrayList<>();
+    private static  List<Villa> villaList = new ArrayList<>();
+    private static  List<House> houseList = new ArrayList<>();
+    private static  List<Room> roomList = new ArrayList<>();
 
     public static void main(String[] args) {
         displayMainMenu();
     }
+
     public static void displayMainMenu() {
         int choose = 0;
         do {
             System.out.println("1.\t Add New Services\n" +
-                               "2.\tShow Services\n" +
-                               "3.\tAdd New Customer\n" +
-                               "4.\tShow Information of Customer\n" +
-                               "5.\tAdd New Booking\n" +
-                               "6.\tShow Information of Employee\n" +
-                               "7.\tExit\n");
+                    "2.\tShow Services\n" +
+                    "3.\tAdd New Customer\n" +
+                    "4.\tShow Information of Customer\n" +
+                    "5.\tAdd New Booking\n" +
+                    "6.\tShow Information of Employee\n" +
+                    "7.\tExit\n");
             System.out.println("Please input choose (1 - 7): ");
             choose = scanner.nextInt();
             switch (choose) {
@@ -55,8 +60,100 @@ public class MainController {
                 case 7:
                     System.exit(0);
                     break;
+                default:
+                    displayMainMenu();
+                    break;
             }
         } while (choose >= 1 && choose <= 7);
+    }
+
+    private static void showInformationOfEmployee() {
+    }
+
+    private static void addInformationInFile(int selectionCustomer) {
+
+        String line;
+
+        line =   customerList.get(selectionCustomer - 1).getNameCustomer() + COMA +
+                 customerList.get(selectionCustomer - 1).getDayOfBirth() + COMA +
+                 customerList.get(selectionCustomer - 1).getGender() + COMA +
+                 customerList.get(selectionCustomer - 1).getIdCard() + COMA +
+                 customerList.get(selectionCustomer - 1).getPhoneNumber() + COMA +
+                 customerList.get(selectionCustomer - 1).getEmail() + COMA +
+                 customerList.get(selectionCustomer - 1).getTypeCustomer() + COMA +
+                 customerList.get(selectionCustomer - 1).getAddress() + COMA +
+                 customerList.get(selectionCustomer - 1).getUseServices().toString();
+
+        FileUtils.writeFile(line, FILE_BOOKING);
+    }
+
+    private static void addNewBooking() {
+        scanner.nextLine();
+        showInformationOfCustomer();
+        System.out.println(" Selection customer: ");
+        String selectionCustomer = scanner.nextLine();
+
+        System.out.println("-------------------------");
+
+        System.out.println("1.\tBooking Villa\n" +
+                           "2.\tBooking House\n" +
+                           "3.\tBooking Room\n" +
+                           "4.\tBack to menu\n" +
+                           "5.\tExit.");
+        System.out.println("Please input choose( 1-7 ): ");
+        String choose = scanner.nextLine();
+
+        switch (choose){
+            case "1":
+                showAllVilla();
+                System.out.println(" Selection villa you need put: ");
+                String chooseVilla = scanner.nextLine();
+                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(villaList.get(Integer.parseInt(chooseVilla )- 1));
+                addInformationInFile(Integer.parseInt(chooseVilla));
+                break;
+            case "2":
+                showAllHouse();
+                System.out.println(" Selection villa you need put: ");
+                String chooseHouse = scanner.nextLine();
+                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(houseList.get(Integer.parseInt(chooseHouse )- 1));
+                addInformationInFile(Integer.parseInt(chooseHouse));
+                break;
+            case "3":
+                showAllRoom();
+                System.out.println(" Selection villa you need put: ");
+                String chooseRoom = scanner.nextLine();
+                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(roomList.get(Integer.parseInt(chooseRoom)- 1));
+                addInformationInFile(Integer.parseInt(chooseRoom));
+                break;
+            case "4":
+                displayMainMenu();
+                break;
+            case "5":
+                System.exit(0);
+                break;
+        }
+
+    }
+
+    private static void showInformationOfCustomer() {
+        List<String> listStr = FileUtils.readObject(FILE_CUSTOMER);
+        int index = 1;
+
+        for (String line : listStr) {
+
+            String[] split = line.split(",");
+
+            if (split.length != 1) {
+                Customer customer = new Customer(split[0], split[1], split[2], split[3], split[4], split[5], split[6], split[7], null);
+                customerList.add(customer);
+
+            }
+        }
+        Collections.sort(customerList);
+        for (Customer customer : customerList) {
+            System.out.println(index++ + ". " + customer);
+        }
+
     }
 
     private static void showServices() {
@@ -74,25 +171,25 @@ public class MainController {
             choose = scanner.nextInt();
             switch (choose) {
                 case 1:
-                    showAllService(VILLA);
+                    showAllVilla();
                     break;
                 case 2:
-                    showAllService(HOUSE);
+                    showAllHouse();
                     break;
                 case 3:
-                    showAllService(ROOM);
+                    showAllRoom();
                     break;
                 case 4:
-                    showAllServiceNotDup(VILLA);
+
                     break;
                 case 5:
-                    showAllServiceNotDup(HOUSE);
+
                     break;
                 case 6:
-                    showAllServiceNotDup(ROOM);
+
                     break;
                 case 7:
-                     displayMainMenu();
+                    displayMainMenu();
                     break;
                 case 8:
                     System.exit(0);
@@ -102,295 +199,117 @@ public class MainController {
 
     }
 
-    private static void showAllServiceNotDup(String fileName) {
-        Set<String> setOfServices = new TreeSet<>();
-        System.out.println("---------------------------------");
-        System.out.println("List services not duplicate name: ");
-        for (Services services : readAllServices(fileName)) {
-            setOfServices.add(services.getFullName());
+    private static void showAllRoom() {
+        List<String> listStr = FileUtils.readObject(FILE_ROOM);
+        int index = 1;
 
-        }
+        for (String line : listStr) {
 
-        for (String name : setOfServices ) {
-            System.out.println(name);
-        }
-    }
+            String[] split = line.split(",");
 
+            if (split.length != 1) {
 
-    private static void showAllService(String fileName) {
-
-        List<Services> listServices = readAllServices(fileName);
-
-        Services services = null;
-        System.out.println("---------------------------------");
-        System.out.println("List services: ");
-
-        for (int i = 0; i < listServices.size(); i++ ) {
-            // lấy từng phần tử:
-            services = listServices.get(i);
-            System.out.println((i + 1)+". ");
-            services.showInFor();
-
-        }
-        /*for (Services services : readAllServices(fileName)) {
-            services.showInFor();
-
-        }*/
-
-        System.out.println("Show data complete!!! ... ");
-    }
-
-
-    public static List<Services> readAllServices(String fileName) {
-        FileUtils.setFullPathFile(fileName);
-        List<String> propertiesServices = FileUtils.readFile();
-        List<Services> listOfServices = new ArrayList<>();
-        String[] propertiesElement = null;
-        Services services = null;
-        for (String properties : propertiesServices) {
-            propertiesElement = properties.split(StringUtils.COMMA);
-
-            if (fileName.equals(VILLA)) {
-
-                services = new Villa();
-
-                ((Villa) services).setStandrdRoom(propertiesElement[6]);
-                ((Villa) services).setDescriptionConvent(propertiesElement[7]);
-                ((Villa) services).setAreaPool(Double.parseDouble(propertiesElement[8]));
-                ((Villa) services).setNumberFloors(Integer.parseInt(propertiesElement[9]));
-
-            } else if (fileName.equals(HOUSE)) {
-
-                services = new House();
-
-                ((House) services).setStandrdRoom(propertiesElement[6]);
-                ((House) services).setDescriptionConvent(propertiesElement[7]);
-                ((House) services).setNumberFloors(Integer.parseInt(propertiesElement[8]));
-
-            } else if(fileName.equals(ROOM)) {
-
-                EtraServices etraServices = new EtraServices(propertiesElement[6],propertiesElement[7],Double.parseDouble(propertiesElement[8]));
-                services = new Room();
-                ((Room) services).setServiceFree(etraServices);
-
+                Room room = new Room(split[0], split[1], Double.parseDouble(split[2]), Double.parseDouble(split[3]), Integer.parseInt(split[4]), split[5], new EtraServices(split[6], split[7], Double.parseDouble(split[8])));
+                roomList.add(room);
             }
 
-            services.setId(propertiesElement[0]);
-            services.setFullName(propertiesElement[1]);
-            services.setAreaUse(Double.parseDouble(propertiesElement[2]));
-            services.setRentalCosts(Double.parseDouble(propertiesElement[3]));
-            services.setMaximumPeoples(Integer.parseInt(propertiesElement[4]));
-            services.setRentalType(propertiesElement[5]);
-
-            listOfServices.add(services);
-
+            for (Room room : roomList) {
+                System.out.println(index++ + ". " + room);
+            }
         }
-        return listOfServices;
 
     }
 
-    /*public static List<Employee> readAllEmployee (String fileName) {
-        FileUtils.setFullPathFile(fileName);
-        List<String> propertiesEmployee = FileUtils.readFile();
-        List<Employee> listOfEmployee = new ArrayList<>();
-        String[] propertiesElement = null;
-        Employee employee = null;
-        for (String propertie : propertiesServices) {
-            propertiesElement = properties.split(StringUtils.COMMA);
+    private static void showAllHouse() {
 
-            if (fileName.equals(VILLA)) {
+        List<String> listStr = FileUtils.readObject(FILE_HOUSE);
+        int index = 1;
 
-                services = new Villa();
+        for (String line : listStr) {
 
-                ((Villa) services).setStandrdRoom(propertiesElement[6]);
-                ((Villa) services).setDescriptionConvent(propertiesElement[7]);
-                ((Villa) services).setAreaPool(Double.parseDouble(propertiesElement[8]));
-                ((Villa) services).setNumberFloors(Integer.parseInt(propertiesElement[9]));
+            String[] split = line.split(",");
 
-            } else if (fileName.equals(HOUSE)) {
+            if (split.length != 1) {
 
-                services = new House();
-
-                ((House) services).setStandrdRoom(propertiesElement[6]);
-                ((House) services).setDescriptionConvent(propertiesElement[7]);
-                ((House) services).setNumberFloors(Integer.parseInt(propertiesElement[8]));
-
-            } else if(fileName.equals(ROOM)) {
-
-                EtraServices etraServices = new EtraServices(propertiesElement[6],propertiesElement[7],Double.parseDouble(propertiesElement[8]));
-                services = new Room();
-                ((Room) services).setServiceFree(etraServices);
+                House house = new House(split[0], split[1], Double.parseDouble(split[2]), Double.parseDouble(split[3]), Integer.parseInt(split[4]), split[5],
+                        split[6], split[7], Integer.parseInt(split[8]));
+                houseList.add(house);
 
             }
-
-            services.setId(propertiesElement[0]);
-            services.setFullName(propertiesElement[1]);
-            services.setAreaUse(Double.parseDouble(propertiesElement[2]));
-            services.setRentalCosts(Double.parseDouble(propertiesElement[3]));
-            services.setMaximumPeoples(Integer.parseInt(propertiesElement[4]));
-            services.setRentalType(propertiesElement[5]);
-
-            listOfServices.add(services);
-
+            for (House house : houseList) {
+                System.out.println(index++ + ". " + house);
+            }
         }
-        return listOfServices;
-
-    }*/
-
-    private static void showInformationOfEmployee() {
 
     }
 
-    private static void addNewBooking() {
+    private static void showAllVilla() {
 
-        // show information customer in file CSV:
-        List<Customer> listCustomer = readAllCustomer();
-        showInformationOfCustomer();
-        System.out.println("Please choose customer to booking: ");
-        int iCustomer = scanner.nextInt();
-        List<Services> listOfService = null;
-        showInformationOfCustomer();
+        List<String> listStr = FileUtils.readObject(FILE_VILA);
+        int index = 1;
 
-        int choose = 0;
+        for (String line : listStr) {
 
-            System.out.println("1.\tBooking Villa. \n" +
-                               "2.\tBooking House. \n" +
-                               "3.\tBooking Room. \n" +
-                               "4.\tBack to menu.\n" +
-                               "5.\tExit.\n" );
-            System.out.println("Please input booking a services: ");
-            choose = scanner.nextInt();
-             switch (choose) {
-                 case 1:
-                     listOfService = readAllServices(VILLA);
-                     showAllService(VILLA);
-                     break;
-                 case 2:
-                     listOfService = readAllServices(HOUSE);
-                     showAllService(HOUSE);
+            String[] split = line.split(",");
 
-                     break;
-                 case 3:
-                     listOfService = readAllServices(ROOM);
-                     showAllService(ROOM);
-                     break;
-                 case 4:
-                     displayMainMenu();
-                     break;
-                 case 5:
-                     System.exit(0);
-                     break;
-             }
-
-
-        System.out.println("Please choose service to booking: ");
-        int iServices = scanner.nextInt();
-
-        // call customer :
-
-        Customer customer = listCustomer.get(iCustomer - 1);
-        customer.setUseServices(listOfService.get(iServices - 1 ));
-
-        FileUtils.setFullPathFile(BOOKING);
-        FileUtils.writeFile(new String[]{customer.toString()});
-
-        System.out.println("Booking is done!");
-    }
-
-
-    private static List<Customer> readAllCustomer(){
-        FileUtils.setFullPathFile(CUSTOMER);
-        List<String> propertiesCustomer = FileUtils.readFile();
-        List<Customer> listOfCustomer = new ArrayList<>();
-        String[] propertiesElement = null;
-        Customer customer = null;
-        for (String properties : propertiesCustomer) {
-            propertiesElement = properties.split(StringUtils.COMMA);
-             customer = new Customer();
-             customer.setNameCustomer(propertiesElement[0]);
-             customer.setDayOfBirth(propertiesElement[1]);
-             customer.setGender(propertiesElement[2]);
-             customer.setIdCard(propertiesElement[3]);
-             customer.setPhoneNumber(propertiesElement[4]);
-             customer.setEmail(propertiesElement[5]);
-             customer.setTypeCustomer(propertiesElement[6]);
-             customer.setAddress(propertiesElement[7]);
-
-             listOfCustomer.add(customer);
-
-        }
-        Collections.sort(listOfCustomer);
-        return listOfCustomer;
-}
-    private static void showInformationOfCustomer() {
-        System.out.println("---------------------------------");
-        System.out.println("List Customer: ");
-        // lấy data CSV ra:
-        List<Customer> listOfCustomer = readAllCustomer();
-
-
-       /* for (Customer customer :listOfCustomers) {
-            customer.showInFor();
-
-        }*/
-
-       // đánh dấu số thứ tự:
-         Customer customer = null;
-        for(int i = 0; i < listOfCustomer.size(); i++) {
-            customer = listOfCustomer.get(i);
-            System.out.println((i + 1)+". ");
-            customer.showInFor();
+            if (split.length != 1) {
+                Villa villa = new Villa(split[0], split[1], Double.parseDouble(split[2]), Double.parseDouble(split[3]), Integer.parseInt(split[4]),
+                        split[5], split[6], split[7], Double.parseDouble(split[8]), Integer.parseInt(split[9])
+                );
+                villaList.add(villa);
+            }
+            for (Villa villa: villaList) {
+                System.out.println(index++ + ". " + villa);
+            }
         }
 
-        System.out.println("Show data complete!!! ... ");
     }
+
 
     private static void addNewCustomer() {
-        FileUtils.setFullPathFile(CUSTOMER);
-         scanner.nextLine();
-         boolean flag;
+        scanner.nextLine();
+        boolean flag;
         String nameCustomer = null;
-         do {
-             flag = true;
-             System.out.println("Please input nameCustomer: ");
-             nameCustomer = scanner.nextLine();
+        do {
+            flag = true;
+            System.out.println("Please input nameCustomer: ");
+            nameCustomer = scanner.nextLine();
 
-             try {
-                 Validators.isValidFullName(nameCustomer);
-             } catch (NameException e) {
-                 flag = false;
-                 e.printStackTrace();
-             }
-         } while (!flag);
+            try {
+                Validators.isValidFullName(nameCustomer);
+            } catch (NameException e) {
+                flag = false;
+                e.printStackTrace();
+            }
+        } while (!flag);
 
         String dayOfBirth = null;
-         do {
-             flag = true;
-             System.out.println("Please input dayOfBirth: ");
-             dayOfBirth = scanner.nextLine();
-             scanner.nextLine();
-             try {
-                 Validators.isValidBirthday(dayOfBirth);
-             } catch (BirthdayException e) {
-                 flag = false;
-                 e.printStackTrace();
-             }
-         } while (!flag);
+        do {
+            flag = true;
+            System.out.println("Please input dayOfBirth: ");
+            dayOfBirth = scanner.nextLine();
+            try {
+                Validators.isValidBirthday(dayOfBirth);
+            } catch (BirthdayException e) {
+                flag = false;
+                e.printStackTrace();
+            }
+        } while (!flag);
         String gender = null;
-         do {
-             flag = true;
-             System.out.println("Please input gender: ");
-             gender = scanner.nextLine();
+        do {
+            flag = true;
+            System.out.println("Please input gender: ");
+            gender = scanner.nextLine();
 
-             try {
-                 Validators.isValidGender(gender);
-             } catch (GenderException e) {
-                 flag = false;
-                 e.printStackTrace();
-             }
+            try {
+                Validators.isValidGender(gender);
+            } catch (GenderException e) {
+                flag = false;
+                e.printStackTrace();
+            }
 
-             ConvertUtils.normalizeStr(gender);
-         } while (!flag);
+            ConvertUtils.normalizeStr(gender);
+        } while (!flag);
 
         String idCard = null;
         do {
@@ -420,31 +339,43 @@ public class MainController {
         } while (!flag);
 
         String email = null;
-         do {
-             flag = true;
-             System.out.println("Please input email: ");
-             email = scanner.nextLine();
+        do {
+            flag = true;
+            System.out.println("Please input email: ");
+            email = scanner.nextLine();
 
-             try {
-                 Validators.isValidEmail(email);
-             } catch (EmailException e) {
-                 flag = false;
-                 e.printStackTrace();
-             }
-         } while (!flag);
-         System.out.println("Please input TypeCustomer: ");
-         String TypeCustomer = scanner.nextLine();
-         System.out.println("Please input address: ");
-         String address = scanner.nextLine();
+            try {
+                Validators.isValidEmail(email);
+            } catch (EmailException e) {
+                flag = false;
+                e.printStackTrace();
+            }
+        } while (!flag);
+        System.out.println("Please input TypeCustomer: ");
+        String typeCustomer = scanner.nextLine();
+        System.out.println("Please input address: ");
+        String address = scanner.nextLine();
+        Services useService = null;
+        Customer customer = new Customer(nameCustomer, dayOfBirth, gender, idCard, phoneNumber, email, typeCustomer, address, useService);
 
-         FileUtils.writeFile(new String[]{nameCustomer, dayOfBirth, gender, idCard,
-                                          phoneNumber, email, TypeCustomer, address});
-         System.out.println("Add complete!!! .... ");
+        String line =
+                customer.getNameCustomer() + COMA +
+                        customer.getDayOfBirth() + COMA +
+                        customer.getIdCard() + COMA +
+                        customer.getPhoneNumber() + COMA +
+                        customer.getEmail() + COMA +
+                        customer.getTypeCustomer() + COMA +
+                        customer.getAddress() + COMA +
+                        customer.getUseServices() + "\n";
+        FileUtils.writeFile(line, FILE_CUSTOMER);
+
+        System.out.println("Add complete!!! .... ");
 
     }
 
 
     private static void addNewServices() {
+        scanner.nextLine();
         int choose = 0;
         do {
             System.out.println("1.\tAdd New Villa\n" +
@@ -453,7 +384,7 @@ public class MainController {
                     "4.\tBack to menu\n" +
                     "5.\tExit\n");
             System.out.println("Please choose service to add: ");
-            choose = scanner.nextInt();
+            choose = Integer.parseInt(scanner.nextLine());
 
             switch (choose) {
                 case 1:
@@ -469,17 +400,16 @@ public class MainController {
                     displayMainMenu();
                     break;
                 case 5:
+                    System.exit(0);
                     break;
             }
 
-        } while (choose >= 1 && choose <= 5 );
+        } while (choose >= 1 && choose <= 5);
 
     }
 
     private static void addNewRoom() {
-        FileUtils.setFullPathFile(ROOM);
 
-        scanner.nextLine();
         String id = null;
         do {
             System.out.println("Please input id: ");
@@ -495,21 +425,21 @@ public class MainController {
         double areaUse = 0;
         do {
             System.out.println("Please input areaUse: ");
-            areaUse = scanner.nextDouble();
-        } while (!Validators.isMoreThan(areaUse,30));
+            areaUse = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(areaUse, 30));
 
         double rentalCosts = 0;
         do {
             System.out.println("Please input rentalCosts: ");
-            rentalCosts = scanner.nextDouble();
-        } while (!Validators.isMoreThan(rentalCosts,0));
+            rentalCosts = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(rentalCosts, 0));
 
         int maximumPeoples = 0;
         do {
             System.out.println("Please input  maximumPeoples: ");
-            maximumPeoples = scanner.nextInt();
-        } while (!Validators.isMoreThan(maximumPeoples,0,20));
-        scanner.nextLine();
+            maximumPeoples = Integer.parseInt(scanner.nextLine());
+        } while (!Validators.isMoreThan(maximumPeoples, 0, 20));
+
         String rentalType = null;
         do {
             System.out.println("Please input rentalType: ");
@@ -524,17 +454,27 @@ public class MainController {
         System.out.println("Please input unit: ");
         String unit = scanner.nextLine();
         System.out.println("Please input priceMoney: ");
-        double priceMoney = scanner.nextDouble();
+        double priceMoney = Double.parseDouble(scanner.nextLine());
+        EtraServices etraServices = new EtraServices(nameServiceGoWith, unit, priceMoney);
+        Room room = new Room(id, fullName, areaUse, rentalCosts, maximumPeoples, rentalType, etraServices);
 
+        String line =
+                room.getId() + COMA +
+                        room.getFullName() + COMA +
+                        room.getAreaUse() + COMA +
+                        room.getRentalCosts() + COMA +
+                        room.getMaximumPeoples() + COMA +
+                        room.getRentalType() + COMA +
+                        etraServices.getNameServiceGoWith() + COMA +
+                        etraServices.getUnit() + COMA +
+                        etraServices.getPriceMoney() + "\n";
 
-        FileUtils.writeFile(new String[]{id, fullName, String.valueOf(areaUse), String.valueOf(rentalCosts),
-                String.valueOf(maximumPeoples),rentalType,nameServiceGoWith,unit,String.valueOf(priceMoney)});
+        FileUtils.writeFile(line, FILE_ROOM);
         System.out.println("Room add complete!!!! .... ");
     }
 
+
     private static void addNewHouse() {
-        FileUtils.setFullPathFile(HOUSE);
-        scanner.nextLine();
         String id = null;
         do {
             System.out.println("Please input id: ");
@@ -550,21 +490,21 @@ public class MainController {
         double areaUse = 0;
         do {
             System.out.println("Please input areaUse: ");
-            areaUse = scanner.nextDouble();
-        } while (!Validators.isMoreThan(areaUse,30));
+            areaUse = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(areaUse, 30));
 
         double rentalCosts = 0;
         do {
             System.out.println("Please input rentalCosts: ");
-            rentalCosts = scanner.nextDouble();
-        } while (!Validators.isMoreThan(rentalCosts,0));
+            rentalCosts = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(rentalCosts, 0));
 
         int maximumPeoples = 0;
         do {
             System.out.println("Please input  maximumPeoples: ");
-            maximumPeoples = scanner.nextInt();
-        } while (!Validators.isMoreThan(maximumPeoples,0,20));
-        scanner.nextLine();
+            maximumPeoples = Integer.parseInt(scanner.nextLine());
+        } while (!Validators.isMoreThan(maximumPeoples, 0, 20));
+
         String rentalType = null;
         do {
             System.out.println("Please input rentalType: ");
@@ -581,17 +521,28 @@ public class MainController {
         int numberFloors = 0;
         do {
             System.out.println("Please input numberFloors: ");
-            numberFloors = scanner.nextInt();
-        } while (!Validators.isMoreThan(numberFloors,0));
+            numberFloors = Integer.parseInt(scanner.nextLine());
+        } while (!Validators.isMoreThan(numberFloors, 0));
 
-        FileUtils.writeFile(new String[]{id, fullName, String.valueOf(areaUse), String.valueOf(rentalCosts),
-                String.valueOf(maximumPeoples),rentalType, standrdRoom, descriptionConvent, String.valueOf(numberFloors)});
-        System.out.println("House add complete!!!! .... ");
+        House house = new House(id, fullName, areaUse, rentalCosts, maximumPeoples, rentalType, standrdRoom
+                , descriptionConvent, numberFloors);
+        String line =
+                house.getId() + COMA +
+                        house.getFullName() + COMA +
+                        house.getAreaUse() + COMA +
+                        house.getRentalCosts() + COMA +
+                        house.getMaximumPeoples() + COMA +
+                        house.getRentalType() + COMA +
+                        house.getStandrdRoom() + COMA +
+                        house.getDescriptionConvent() + COMA +
+                        house.getNumberFloors() + "\n";
+
+        FileUtils.writeFile(line, FILE_HOUSE);
+        System.out.println("Villa add complete!!!! .... ");
     }
 
     private static void addNewVilla() {
-        FileUtils.setFullPathFile(VILLA);
-        scanner.nextLine();
+
         String id = null;
         do {
             System.out.println("Please input id: ");
@@ -604,23 +555,23 @@ public class MainController {
             fullName = scanner.nextLine();
         } while (!Validators.isValidService(fullName, Validators.SERVICE_NAME_REGEX));
 
-        double areaUse = 0;
+        double areaUse;
         do {
             System.out.println("Please input areaUse: ");
-            areaUse = scanner.nextDouble();
-        } while (!Validators.isMoreThan(areaUse,30));
+            areaUse = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(areaUse, 30));
 
         double rentalCosts = 0;
         do {
             System.out.println("Please input rentalCosts: ");
-            rentalCosts = scanner.nextDouble();
-        } while (!Validators.isMoreThan(rentalCosts,0));
+            rentalCosts = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(rentalCosts, 0));
 
         int maximumPeoples = 0;
         do {
             System.out.println("Please input  maximumPeoples: ");
             maximumPeoples = scanner.nextInt();
-        } while (!Validators.isMoreThan(maximumPeoples,0,20));
+        } while (!Validators.isMoreThan(maximumPeoples, 0, 20));
         scanner.nextLine();
         String rentalType = null;
         do {
@@ -637,17 +588,29 @@ public class MainController {
         double areaPool = 0;
         do {
             System.out.println("Please input area Pool : ");
-            areaPool = scanner.nextDouble();
-        } while (!Validators.isMoreThan(areaPool,30));
+            areaPool = Double.parseDouble(scanner.nextLine());
+        } while (!Validators.isMoreThan(areaPool, 30));
         int numberFloors = 0;
         do {
             System.out.println("Please input numberFloors: ");
-            numberFloors = scanner.nextInt();
-        } while (!Validators.isMoreThan(numberFloors,0));
+            numberFloors = Integer.parseInt(scanner.nextLine());
+        } while (!Validators.isMoreThan(numberFloors, 0));
 
-        FileUtils.writeFile(new String[]{id, fullName, String.valueOf(areaUse), String.valueOf(rentalCosts),
-                String.valueOf(maximumPeoples),rentalType, standrdRoom, descriptionConvent,
-                String.valueOf(areaPool), String.valueOf(numberFloors)});
+        Villa villa = new Villa(id, fullName, areaUse, rentalCosts, maximumPeoples, rentalType, standrdRoom
+                , descriptionConvent, areaPool, numberFloors);
+        String line =
+                villa.getId() + COMA +
+                        villa.getFullName() + COMA +
+                        villa.getAreaUse() + COMA +
+                        villa.getRentalCosts() + COMA +
+                        villa.getMaximumPeoples() + COMA +
+                        villa.getRentalType() + COMA +
+                        villa.getStandrdRoom() + COMA +
+                        villa.getDescriptionConvent() + COMA +
+                        villa.getAreaPool() + COMA +
+                        villa.getNumberFloors() + "\n";
+
+        FileUtils.writeFile(line, FILE_VILA);
         System.out.println("Villa add complete!!!! .... ");
     }
 }

@@ -76,15 +76,5 @@ public abstract class Services {
 
     public abstract void showInFor();
 
-    @Override
-    public String toString() {
-        return "Services{" +
-                "id='" + id + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", areaUse=" + areaUse +
-                ", rentalCosts=" + rentalCosts +
-                ", maximumPeoples=" + maximumPeoples +
-                ", rentalType='" + rentalType + '\'' +
-                '}';
-    }
+
 }

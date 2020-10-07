@@ -43,7 +43,7 @@ public class Customer implements Comparable<Customer> {
         this.nameCustomer = nameCustomer;
     }
 
-    public String getDayOfBirth(String s) {
+    public String getDayOfBirth() {
         return dayOfBirth;
     }
 
@@ -51,7 +51,7 @@ public class Customer implements Comparable<Customer> {
         this.dayOfBirth = dayOfBirth;
     }
 
-    public String getGender(String s) {
+    public String getGender() {
         return gender;
     }
 
@@ -59,7 +59,7 @@ public class Customer implements Comparable<Customer> {
         this.gender = gender;
     }
 
-    public String getIdCard(String s) {
+    public String getIdCard() {
         return idCard;
     }
 
@@ -67,7 +67,7 @@ public class Customer implements Comparable<Customer> {
         this.idCard = idCard;
     }
 
-    public String getPhoneNumber(String s) {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -108,7 +108,7 @@ public class Customer implements Comparable<Customer> {
     }
 
     public void showInFor(){
-        System.out.println(this.toString());
+         System.out.println(this.toString());
     }
     @Override
     public String toString() {
@@ -123,20 +123,11 @@ public class Customer implements Comparable<Customer> {
                 ", address='" + address + '\'' +
                 '}';
     }
-
     @Override
-    public int compareTo(Customer second) {
-        // so sánh theo tên:
-        // nếu : this.nameCustomer > second.nameCustomer = > -1
-        // nếu : this.nameCustomer < second.nameCustomer = > đổi chỗ
-        // nếu : this.nameCustomer = second.nameCustomer = > 0  thì so sánh năm sinh
-
-        int result = this.nameCustomer.compareTo(second.nameCustomer);
-
-        if(result == 0) {
-            int yearCustomerFirst = Integer.parseInt(this.dayOfBirth.split("/")[2]);
-            int yearCustomerSecond = Integer.parseInt(second.dayOfBirth.split("/")[2]);
-            result = yearCustomerFirst -yearCustomerSecond;
+    public int compareTo(Customer o) {
+        int result = getNameCustomer().compareTo(o.getNameCustomer());
+        if (result == 0) {
+            result = getDayOfBirth().substring(6,10).compareTo(o.getDayOfBirth().substring(6,10));
         }
         return result;
     }
