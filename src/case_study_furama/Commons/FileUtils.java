@@ -13,6 +13,7 @@
                 FileWriter fileWriter = new FileWriter(fileName, true);
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 bufferedWriter.write(line);
+                bufferedWriter.newLine();
                 bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();

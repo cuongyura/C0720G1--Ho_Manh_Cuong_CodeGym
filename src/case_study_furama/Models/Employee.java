@@ -1,7 +1,7 @@
 package case_study_furama.Models;
 
 public class Employee {
-    private String id;
+    private int id;
     private String name;
     private int age;
     private String address;
@@ -9,18 +9,18 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String id, String name, int age, String address) {
+    public Employee(int id, String name, int age, String address) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.address = address;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -51,7 +51,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", address='" + address + '\'' +

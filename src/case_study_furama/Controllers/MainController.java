@@ -11,16 +11,21 @@ import java.util.*;
 public class MainController {
 
     public static Scanner scanner = new Scanner(System.in);
+
     private static String COMA = ",";
     private static String FILE_VILA = "E:\\Module2\\src\\case_study_furama\\Data\\villa.csv";
     private static String FILE_HOUSE = "E:\\Module2\\src\\case_study_furama\\Data\\house.csv";
     private static String FILE_ROOM = "E:\\Module2\\src\\case_study_furama\\Data\\room.csv";
     private static String FILE_CUSTOMER = "E:\\Module2\\src\\case_study_furama\\Data\\customer.csv";
     private static String FILE_BOOKING = "E:\\Module2\\src\\case_study_furama\\Data\\booking.csv";
+    public static String FILE_EMPLOYEE = "E:\\Module2\\src\\case_study_furama\\Data\\employee.csv";
+
     private static  List<Customer> customerList = new ArrayList<>();
     private static  List<Villa> villaList = new ArrayList<>();
     private static  List<House> houseList = new ArrayList<>();
     private static  List<Room> roomList = new ArrayList<>();
+    public static  List<Employee> employeeList = new ArrayList<>();
+    public static  Stack<Employee> listStack = new Stack<>();
 
     public static void main(String[] args) {
         displayMainMenu();
@@ -35,8 +40,10 @@ public class MainController {
                     "4.\tShow Information of Customer\n" +
                     "5.\tAdd New Booking\n" +
                     "6.\tShow Information of Employee\n" +
-                    "7.\tExit\n");
-            System.out.println("Please input choose (1 - 7): ");
+                    "7.\tShow Queue of Customer\n" +
+                    "8.\tFind File Of Employee(Stack)\n" +
+                    "9.\tExit\n");
+            System.out.println("Please input choose (1 - 9): ");
             choose = scanner.nextInt();
             switch (choose) {
                 case 1:
@@ -58,17 +65,85 @@ public class MainController {
                     showInformationOfEmployee();
                     break;
                 case 7:
+                    showQueueOfCustomers();
+                    break;
+                case 8:
+                   findFileOfEmployee();
+                    break;
+                case 9:
                     System.exit(0);
                     break;
                 default:
                     displayMainMenu();
                     break;
             }
-        } while (choose >= 1 && choose <= 7);
+        } while (choose >= 1 && choose <= 9);
     }
 
-    private static void showInformationOfEmployee() {
+    private static void findFileOfEmployee() {
+        System.out.println();
+        int size = listStack.size();
+        boolean flag = false;
+        System.out.print("Please input you need find id :");
+        int input = scanner.nextInt();
+
+        for (int i = 0; i < size; i++) {
+            if (input == listStack.peek().getId()) {
+                System.out.println(listStack.pop());
+                flag = true;
+                continue;
+            }
+            listStack.pop();
+        }
+        if (!flag) {
+            System.err.println("Employee not founds! ");
+        }
     }
+
+    private static void showQueueOfCustomers() {
+
+         // create method a queue:
+         Queue<Customer> customerQueue = new LinkedList<>();
+
+         // show list customer:
+         showInformationOfCustomer();
+
+         System.out.println();
+         int choose = scanner.nextInt();
+         customerQueue.add(customerList.get(3));
+         customerQueue.add(customerList.get(5));
+         customerQueue.add(customerList.get(1));
+         Customer customer = null;
+
+         System.out.println("--------------------");
+         System.out.println("List customer who buy ticket: ");
+         while (!customerQueue.isEmpty()){
+              customer = customerQueue.poll();
+              customer.showInFor();
+
+          }
+
+
+    }
+
+
+
+    public static void showInformationOfEmployee() {
+        readAllEmployee();
+        Map<Integer, Employee> employeeMap = new TreeMap<>();
+       int index = 1;
+       for (Employee employee : employeeList) {
+           employeeMap.put(employee.getId(), employee);
+//           System.out.println(index++ + ". " + employee);
+       }
+
+
+       for (Integer key : employeeMap.keySet()) {
+           System.out.println(key + " " + employeeMap.get(key));
+       }
+
+    }
+
 
     private static void addInformationInFile(int selectionCustomer) {
 
@@ -89,6 +164,7 @@ public class MainController {
 
     private static void addNewBooking() {
         scanner.nextLine();
+
         showInformationOfCustomer();
         System.out.println(" Selection customer: ");
         String selectionCustomer = scanner.nextLine();
@@ -133,6 +209,19 @@ public class MainController {
                 break;
         }
 
+    }
+
+    public static void readAllEmployee() {
+
+        List<String> listStr = FileUtils.readObject(FILE_EMPLOYEE);
+        for (String line : listStr) {
+            String[] split = line.split(",");
+            if(split.length != 1){
+                Employee employee = new Employee(Integer.parseInt(split[0]), split[1],Integer.parseInt(split[2]),split[3]);
+                employeeList.add(employee);
+                listStack.add(employee);
+            }
+        }
     }
 
     private static void showInformationOfCustomer() {
@@ -180,13 +269,13 @@ public class MainController {
                     showAllRoom();
                     break;
                 case 4:
-
+                    showAllVillaNotDuplicate();
                     break;
                 case 5:
-
+                    showAllHouseNotDuplicate();
                     break;
                 case 6:
-
+                    showAllRoomNotDuplicate();
                     break;
                 case 7:
                     displayMainMenu();
@@ -199,9 +288,48 @@ public class MainController {
 
     }
 
-    private static void showAllRoom() {
+    private static void showAllRoomNotDuplicate() {
+        readAllRoom();
+        Set<String> stringSet = new TreeSet<>();
+
+        for (Room room : roomList){
+            stringSet.add(room.getFullName());
+        }
+        for (String str : stringSet ) {
+            System.out.println(str);
+        }
+
+
+
+    }
+
+    private static void showAllHouseNotDuplicate() {
+        readAllHouse();
+        Set<String> stringSet = new TreeSet<>();
+
+        for (House house : houseList){
+            stringSet.add(house.getFullName());
+        }
+        for (String str : stringSet ) {
+            System.out.println(str);
+        }
+
+    }
+
+    private static void showAllVillaNotDuplicate() {
+        readAllVilla();
+        Set<String> stringSet = new TreeSet<>();
+
+        for (Villa villa : villaList){
+             stringSet.add(villa.getFullName());
+        }
+        for (String str : stringSet ) {
+            System.out.println(str);
+        }
+    }
+    private static void readAllRoom() {
+
         List<String> listStr = FileUtils.readObject(FILE_ROOM);
-        int index = 1;
 
         for (String line : listStr) {
 
@@ -212,18 +340,19 @@ public class MainController {
                 Room room = new Room(split[0], split[1], Double.parseDouble(split[2]), Double.parseDouble(split[3]), Integer.parseInt(split[4]), split[5], new EtraServices(split[6], split[7], Double.parseDouble(split[8])));
                 roomList.add(room);
             }
+        }
+    }
+    private static void showAllRoom() {
 
+            int index = 1;
             for (Room room : roomList) {
                 System.out.println(index++ + ". " + room);
             }
         }
 
-    }
-
-    private static void showAllHouse() {
+    private static void readAllHouse() {
 
         List<String> listStr = FileUtils.readObject(FILE_HOUSE);
-        int index = 1;
 
         for (String line : listStr) {
 
@@ -236,17 +365,20 @@ public class MainController {
                 houseList.add(house);
 
             }
+        }
+    }
+    private static void showAllHouse() {
+             readAllHouse();
+            int index = 1;
             for (House house : houseList) {
                 System.out.println(index++ + ". " + house);
             }
         }
 
-    }
 
-    private static void showAllVilla() {
 
+    private static void readAllVilla(){
         List<String> listStr = FileUtils.readObject(FILE_VILA);
-        int index = 1;
 
         for (String line : listStr) {
 
@@ -258,13 +390,17 @@ public class MainController {
                 );
                 villaList.add(villa);
             }
-            for (Villa villa: villaList) {
-                System.out.println(index++ + ". " + villa);
-            }
-        }
-
     }
 
+
+    }
+    private static void showAllVilla() {
+
+        int index = 1;
+        for (Villa villa: villaList) {
+            System.out.println(index++ + ". " + villa);
+        }
+    }
 
     private static void addNewCustomer() {
         scanner.nextLine();
@@ -456,10 +592,11 @@ public class MainController {
         System.out.println("Please input priceMoney: ");
         double priceMoney = Double.parseDouble(scanner.nextLine());
         EtraServices etraServices = new EtraServices(nameServiceGoWith, unit, priceMoney);
+
         Room room = new Room(id, fullName, areaUse, rentalCosts, maximumPeoples, rentalType, etraServices);
 
         String line =
-                room.getId() + COMA +
+                        room.getId() + COMA +
                         room.getFullName() + COMA +
                         room.getAreaUse() + COMA +
                         room.getRentalCosts() + COMA +
