@@ -25,7 +25,7 @@ public class MainController {
     private static  List<House> houseList = new ArrayList<>();
     private static  List<Room> roomList = new ArrayList<>();
     public static  List<Employee> employeeList = new ArrayList<>();
-    public static  Stack<Employee> listStack = new Stack<>();
+    public static Stack<Employee> listStack = new Stack<>();
 
     public static void main(String[] args) {
         displayMainMenu();
@@ -68,7 +68,7 @@ public class MainController {
                     showQueueOfCustomers();
                     break;
                 case 8:
-                   findFileOfEmployee();
+                    Cabinet.findFileOfEmployee();
                     break;
                 case 9:
                     System.exit(0);
@@ -80,25 +80,6 @@ public class MainController {
         } while (choose >= 1 && choose <= 9);
     }
 
-    private static void findFileOfEmployee() {
-        System.out.println();
-        int size = listStack.size();
-        boolean flag = false;
-        System.out.print("Please input you need find id :");
-        int input = scanner.nextInt();
-
-        for (int i = 0; i < size; i++) {
-            if (input == listStack.peek().getId()) {
-                System.out.println(listStack.pop());
-                flag = true;
-                continue;
-            }
-            listStack.pop();
-        }
-        if (!flag) {
-            System.err.println("Employee not founds! ");
-        }
-    }
 
     private static void showQueueOfCustomers() {
 
@@ -108,11 +89,10 @@ public class MainController {
          // show list customer:
          showInformationOfCustomer();
 
-         System.out.println();
-         int choose = scanner.nextInt();
          customerQueue.add(customerList.get(3));
          customerQueue.add(customerList.get(5));
          customerQueue.add(customerList.get(1));
+
          Customer customer = null;
 
          System.out.println("--------------------");
@@ -164,7 +144,7 @@ public class MainController {
 
     private static void addNewBooking() {
         scanner.nextLine();
-
+        readAllCustomer();
         showInformationOfCustomer();
         System.out.println(" Selection customer: ");
         String selectionCustomer = scanner.nextLine();
@@ -223,10 +203,8 @@ public class MainController {
             }
         }
     }
-
-    private static void showInformationOfCustomer() {
+    private static void readAllCustomer() {
         List<String> listStr = FileUtils.readObject(FILE_CUSTOMER);
-        int index = 1;
 
         for (String line : listStr) {
 
@@ -238,7 +216,12 @@ public class MainController {
 
             }
         }
+    }
+    private static void showInformationOfCustomer() {
+        readAllCustomer();
+
         Collections.sort(customerList);
+        int index = 1;
         for (Customer customer : customerList) {
             System.out.println(index++ + ". " + customer);
         }

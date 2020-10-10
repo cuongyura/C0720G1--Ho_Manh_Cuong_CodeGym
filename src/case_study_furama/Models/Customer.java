@@ -127,6 +127,7 @@ public class Customer implements Comparable<Customer> {
     public int compareTo(Customer o) {
         int result = getNameCustomer().compareTo(o.getNameCustomer());
         if (result == 0) {
+            //22/12/2000
             result = getDayOfBirth().substring(6,10).compareTo(o.getDayOfBirth().substring(6,10));
         }
         return result;
