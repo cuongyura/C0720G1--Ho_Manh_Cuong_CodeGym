@@ -19,6 +19,7 @@ public class MainController {
     private static String FILE_CUSTOMER = "E:\\Module2\\src\\case_study_furama\\Data\\customer.csv";
     private static String FILE_BOOKING = "E:\\Module2\\src\\case_study_furama\\Data\\booking.csv";
     public static String FILE_EMPLOYEE = "E:\\Module2\\src\\case_study_furama\\Data\\employee.csv";
+    private static int chooseCus;
 
     private static  List<Customer> customerList = new ArrayList<>();
     private static  List<Villa> villaList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class MainController {
                     "8.\tFind File Of Employee(Stack)\n" +
                     "9.\tExit\n");
             System.out.println("Please input choose (1 - 9): ");
-            choose = scanner.nextInt();
+            choose = Integer.parseInt(scanner.nextLine());
             switch (choose) {
                 case 1:
                     addNewServices();
@@ -124,71 +125,113 @@ public class MainController {
 
     }
 
-
-    private static void addInformationInFile(int selectionCustomer) {
-
-        String line;
-
-        line =   customerList.get(selectionCustomer - 1).getNameCustomer() + COMA +
-                 customerList.get(selectionCustomer - 1).getDayOfBirth() + COMA +
-                 customerList.get(selectionCustomer - 1).getGender() + COMA +
-                 customerList.get(selectionCustomer - 1).getIdCard() + COMA +
-                 customerList.get(selectionCustomer - 1).getPhoneNumber() + COMA +
-                 customerList.get(selectionCustomer - 1).getEmail() + COMA +
-                 customerList.get(selectionCustomer - 1).getTypeCustomer() + COMA +
-                 customerList.get(selectionCustomer - 1).getAddress() + COMA +
-                 customerList.get(selectionCustomer - 1).getUseServices().toString();
-
-        FileUtils.writeFile(line, FILE_BOOKING);
-    }
-
     private static void addNewBooking() {
-        scanner.nextLine();
-        readAllCustomer();
+        int choose1 = 1;
+        customerList = new ArrayList<>();
         showInformationOfCustomer();
-        System.out.println(" Selection customer: ");
-        String selectionCustomer = scanner.nextLine();
-
-        System.out.println("-------------------------");
-
-        System.out.println("1.\tBooking Villa\n" +
-                           "2.\tBooking House\n" +
-                           "3.\tBooking Room\n" +
-                           "4.\tBack to menu\n" +
-                           "5.\tExit.");
-        System.out.println("Please input choose( 1-7 ): ");
-        String choose = scanner.nextLine();
-
-        switch (choose){
-            case "1":
-                showAllVilla();
-                System.out.println(" Selection villa you need put: ");
-                String chooseVilla = scanner.nextLine();
-                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(villaList.get(Integer.parseInt(chooseVilla )- 1));
-                addInformationInFile(Integer.parseInt(chooseVilla));
-                break;
-            case "2":
-                showAllHouse();
-                System.out.println(" Selection villa you need put: ");
-                String chooseHouse = scanner.nextLine();
-                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(houseList.get(Integer.parseInt(chooseHouse )- 1));
-                addInformationInFile(Integer.parseInt(chooseHouse));
-                break;
-            case "3":
-                showAllRoom();
-                System.out.println(" Selection villa you need put: ");
-                String chooseRoom = scanner.nextLine();
-                customerList.get(Integer.parseInt(selectionCustomer) - 1).setUseServices(roomList.get(Integer.parseInt(chooseRoom)- 1));
-                addInformationInFile(Integer.parseInt(chooseRoom));
-                break;
-            case "4":
-                displayMainMenu();
-                break;
-            case "5":
-                System.exit(0);
-                break;
-        }
-
+        System.out.println("Vui lòng chọn khách hàng: ");
+        chooseCus = Integer.parseInt(scanner.nextLine());
+        do {
+            System.out.println("1.\tBooking Villa\n" +
+                    "2.\tBooking House\n" +
+                    "3.\tBooking Room\n" +
+                    "4.\tBack to menu\n" +
+                    "5.\tExit");
+            System.out.println("nhập số (1-5): ");
+            choose1 = Integer.parseInt(scanner.nextLine());
+            switch (choose1) {
+                case 1:
+                    bookingVilla();
+                    break;
+                case 2:
+                    bookingHouse();
+                    break;
+                case 3:
+                    bookingRoom();
+                    break;
+                case 4:
+                    displayMainMenu();
+                    break;
+                case 5:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("nhập lại:");
+                    break;
+            }
+        }while (choose1 >=1 && choose1 <=5);
+    }
+    private static void bookingRoom() {
+        showAllRoom();
+        System.out.println("chọn Room: ");
+        int room = Integer.parseInt(scanner.nextLine());
+        customerList.get(chooseCus - 1).setUseServices(roomList.get(room - 1));
+        String line;
+        line = customerList.get(chooseCus - 1).getNameCustomer() + COMA +
+                customerList.get(chooseCus - 1).getDayOfBirth() + COMA +
+                customerList.get(chooseCus - 1).getGender() + COMA +
+                customerList.get(chooseCus - 1).getIdCard() + COMA +
+                customerList.get(chooseCus - 1).getPhoneNumber() + COMA +
+                customerList.get(chooseCus - 1).getEmail() + COMA +
+                customerList.get(chooseCus - 1).getTypeCustomer() + COMA +
+                customerList.get(chooseCus - 1).getAddress() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getId() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getFullName() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getAreaUse() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalType() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getMaximumPeoples() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalType();
+        FileUtils.writeFile(line,FILE_BOOKING);
+        System.out.println("booking Room thành công!");
+        displayMainMenu();
+    }
+    private static void bookingHouse() {
+        showAllHouse();
+        System.out.println("chọn House: ");
+        int house = Integer.parseInt(scanner.nextLine());
+        customerList.get(chooseCus - 1).setUseServices(houseList.get(house - 1));
+        String line;
+        line = customerList.get(chooseCus - 1).getNameCustomer() + COMA +
+                customerList.get(chooseCus - 1).getDayOfBirth() + COMA +
+                customerList.get(chooseCus - 1).getGender() + COMA +
+                customerList.get(chooseCus - 1).getIdCard() + COMA +
+                customerList.get(chooseCus - 1).getPhoneNumber() + COMA +
+                customerList.get(chooseCus - 1).getEmail() + COMA +
+                customerList.get(chooseCus - 1).getTypeCustomer() + COMA +
+                customerList.get(chooseCus - 1).getAddress() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getId() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getFullName() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getAreaUse() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalCosts() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getMaximumPeoples() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalType();
+        FileUtils.writeFile(line, FILE_BOOKING);
+        System.err.println("booking House thành công!");
+        displayMainMenu();
+    }
+    private static void bookingVilla() {
+        showAllVilla();
+        System.out.println("chọn Villa:");
+        int villa = Integer.parseInt(scanner.nextLine());
+        customerList.get(chooseCus - 1).setUseServices(villaList.get(villa - 1));
+        String line;
+        line = customerList.get(chooseCus - 1).getNameCustomer() + COMA +
+                customerList.get(chooseCus - 1).getDayOfBirth() + COMA +
+                customerList.get(chooseCus - 1).getGender() + COMA +
+                customerList.get(chooseCus - 1).getIdCard() + COMA +
+                customerList.get(chooseCus - 1).getPhoneNumber() + COMA +
+                customerList.get(chooseCus - 1).getEmail() + COMA +
+                customerList.get(chooseCus - 1).getTypeCustomer() + COMA +
+                customerList.get(chooseCus - 1).getAddress() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getId() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getFullName() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getAreaUse() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalCosts() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getMaximumPeoples() + COMA +
+                customerList.get(chooseCus - 1).getUseServices().getRentalType();
+        FileUtils.writeFile(line, FILE_BOOKING);
+        System.err.println("booking Villa thành công!");
+        displayMainMenu();
     }
 
     public static void readAllEmployee() {
@@ -378,7 +421,7 @@ public class MainController {
 
     }
     private static void showAllVilla() {
-
+        readAllVilla();
         int index = 1;
         for (Villa villa: villaList) {
             System.out.println(index++ + ". " + villa);

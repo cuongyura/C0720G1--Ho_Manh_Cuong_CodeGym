@@ -1,2 +1,4 @@
 
 Ire,22/12/2002,123-123-123,123-123-123,cung@gmail.com,ddd,hue,null,Villa{standrdRoom='Az', descriptionConvent='Az', areaPool=31.0, numberFloors=1}case_study_furama.Models.Villa@5cb0d902
+Ire,22/12/2002,123-123-123,123-123-123,cung@gmail.com,ddd,hue,null,House{standrdRoom='Az', descriptionConvent='Az', numberFloors=10}Services{id='SVHO-1234', fullName='Na', areaUse=31.0, rentalCosts=25.0, maximumPeoples=18, rentalType='Az'}
+Ire,22/12/2002,123-123-123,123-123-123,cung@gmail.com,ddd,hue,null,SVVL-1234,Na,31.0,20.0,12,Az
